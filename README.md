@@ -8,9 +8,7 @@
 </br>
 <em>An illustrated, hands-on course on how vLLM works — with a runnable mini inference engine.</em>
 
-[![CI](https://github.com/feiguangba/minivllm/actions/workflows/sanity.yml/badge.svg)](./.github/workflows/sanity.yml)
-[![GitHub Stars](https://img.shields.io/github/stars/feiguangba/minivllm?style=flat-square&color=DAA520)](https://github.com/feiguangba/minivllm/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/feiguangba/minivllm?style=flat-square)](https://github.com/feiguangba/minivllm/network)
+[![CI](https://github.com/feiguangba/minivllm/actions/workflows/sanity.yml/badge.svg)](https://github.com/feiguangba/minivllm/actions/workflows/sanity.yml)
 [![Python](https://img.shields.io/badge/python-3.12-blue?style=flat-square)](https://www.python.org/)
 [![Binder](https://img.shields.io/badge/Binder-launch-E77C35?style=flat-square&logo=jupyter&logoColor=white)](https://mybinder.org/v2/gh/feiguangba/minivllm/master)
 

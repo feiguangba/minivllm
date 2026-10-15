@@ -12,7 +12,6 @@ An illustrated, hands-on course on how vLLM works — with a runnable mini infer
 [![GitHub Stars](https://img.shields.io/github/stars/feiguangba/minivllm?style=flat-square&color=DAA520)](https://github.com/feiguangba/minivllm/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/feiguangba/minivllm?style=flat-square)](https://github.com/feiguangba/minivllm/network)
 [![Python](https://img.shields.io/badge/python-3.12-blue?style=flat-square)](https://www.python.org/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/fuyunsi/vllm-learn-labs?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/r/fuyunsi/vllm-learn-labs)
 [![Binder](https://img.shields.io/badge/Binder-launch-E77C35?style=flat-square&logo=jupyter&logoColor=white)](https://mybinder.org/v2/gh/feiguangba/minivllm/master)
 
 [English](./README_en.md) | [中文](./README.md)
@@ -23,7 +22,7 @@ An illustrated, hands-on course on how vLLM works — with a runnable mini infer
 
 **minivllm** is an open course that takes you from zero to understanding LLM inference systems. Around vLLM's core techniques — KV Cache, PagedAttention, continuous batching, CUDA Graph, quantization, parallelism, attention kernels, Triton, AI compilers, and the Huawei Ascend stack — it offers **11 chapters × 100 hands-on lessons**, plus a **~500-line, runnable, tested** mini inference engine that turns every concept into real code.
 
-> All you need: follow the notebooks (Docker if you have a GPU, Binder if you don't)</br>
+> All you need: install the Python 3.12 dependencies locally to run the notebooks (a GPU makes it faster, but is not required), or use Binder with no install at all</br>
 > What you get: a complete path from "using an inference engine" to "being able to write one"
 
 ## ✨ What's inside
@@ -51,17 +50,22 @@ When you need source-level depth, open the matching note in [docs/](docs/); for 
 ```bash
 git clone https://github.com/feiguangba/minivllm.git
 cd minivllm
-docker compose up --build          # GPU teaching image (torch 2.11.0+cu128)
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+pip install torch --index-url https://download.pytorch.org/whl/cu128   # use .../whl/cpu without a GPU
+
+jupyter lab                       # http://localhost:8888 — open exercises/chXX/NN_*.ipynb
+streamlit run exercises/hub.py    # in a second terminal: Streamlit index at http://localhost:8501
 ```
 
-Open [http://localhost:8888](http://localhost:8888) (token `vllm_learn`) and [http://localhost:8501](http://localhost:8501) (Streamlit demos). Or pull the prebuilt image: `docker pull fuyunsi/vllm-learn-labs:gpu` then `docker compose up -d labs` (~20GB).
+In Jupyter, pick the `python3` kernel (the environment where you installed the dependencies). `torch` is installed separately because the CUDA build has to match your machine; the CPU build is plenty for ch01–ch03 and `minivllm`.
 
 | Environment | Best for | Link |
 |---|---|---|
-| **Docker (recommended)** | Full 100 lessons, needs an NVIDIA GPU | command above |
+| **Local Python 3.12 (recommended)** | All 100 lessons; a GPU helps, but ch01–ch03 and `minivllm` run on CPU | commands above |
 | **Binder** | Browser, CPU-friendly lessons | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) |
 | **Colab** | Free GPU, one notebook at a time | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/feiguangba/minivllm/blob/master/exercises/ch01/01_token_and_tokenizer.ipynb) |
-| **Local uv** | Without Docker | `pip install -r requirements.txt` + `jupyter lab` |
+| **WSL2 / Linux** | Real `vllm serve` deployment (not natively supported on Windows) | see [ch08 lesson 48](exercises/ch08/48_serve_model.ipynb) |
 
 Most content runs without a GPU — ch01–ch03 and the mini engine are pure CPU:
 
@@ -104,11 +108,10 @@ All 12 figures live in [`exercises/figs/`](exercises/figs/) and are embedded in 
 ```
 minivllm/
 ├── minivllm/                # ★ mini inference engine (~500 lines, tested)
-├── exercises/               # workbook: 11 chapters, 100 lessons + 12 figures
+├── exercises/               # workbook: 11 chapters, 100 lessons + 12 figures + Streamlit index hub.py
 ├── docs/                    # 8 source-level vLLM V1 notes + version conventions
 ├── answers/                 # reference answers (399 exercises)
 ├── tests/                   # engine test suite
-├── docker/                  # GPU teaching image (Dockerfile / entrypoint)
 ├── .binder/                 # cloud (CPU) environment for Binder
 └── assets/                  # logo
 ```

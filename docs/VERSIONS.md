@@ -6,8 +6,8 @@
 |---|---|---|
 | 练习册 / Streamlit | 不绑定 vLLM 包 | 用 `exercises/vllm_real.py`（TinyGPT），CPU 可跑完全部 100 课 |
 | docs 架构文档 | vLLM **V1** · 标注为 v0.23.0-dev | 路径约定 `v1/engine/...`，见 `docs/01_system_architecture.md` 文首 |
-| CPU 教学镜像 `vllm-learn-labs:cpu` | Python 3.12 + torch CPU | `docker compose up`，不含 vLLM |
-| GPU profile `vllm` | 官方 `vllm/vllm-openai:latest` | `docker compose --profile gpu up`，默认 `Qwen/Qwen3-0.6B` |
+| 本地环境 | `requirements.txt`（Python 3.12） | `pip install -r requirements.txt`；torch 单独安装（cu128 或 CPU 版），见 README「快速开始」 |
+| Binder | `.binder/environment.yml` | 云端 CPU 环境，浏览器里免安装体验 |
 
 ## 和 V0 的关系
 
@@ -15,4 +15,6 @@
 
 ## 本机 GPU 备注
 
-作者环境曾用 RTX 5060 Laptop（sm_120）。官方 vLLM 镜像对 Blackwell 消费卡可能失败。失败不影响 CPU 教学路径。
+作者环境为 RTX 5060 Laptop（sm_120），torch 装 `cu128` 轮子后 `torch.cuda.is_available()` 为 True。
+
+没有 GPU 时 ch01–ch03 与 `minivllm` 纯 CPU 即可跑通；依赖 CUDA 的章节（ch07 Attention Kernel、ch09 Triton 等）会走 CPU/模拟回退路径或提示缺少 CUDA。Windows 上 vLLM 本身不原生支持，真机 `vllm serve` 请走 WSL2 / Linux（见 `exercises/ch08/48_serve_model.ipynb`）。

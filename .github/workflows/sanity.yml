@@ -15,8 +15,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: compile exercises
-        run: python -m compileall -q -x "(^|/)(_build|__pycache__|\.ipynb_checkpoints)/" exercises docker
+      - name: compile python sources
+        run: python -m compileall -q -x "(^|/)(_build|__pycache__|\.ipynb_checkpoints)/" exercises minivllm tests
 
   ruff:
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
       # 只查真实错误（语法/未定义名/重复 key），不做风格审查；
       # .ipynb 排除：教学 notebook 跨 cell 共享状态，ruff 逐 cell 分析必然误报 F821
       - name: ruff (errors only)
-        run: ruff check --select E9,F63,F7,F82 --exclude "_build" --extend-exclude "*.ipynb" exercises docker
+        run: ruff check --select E9,F63,F7,F82 --exclude "_build" --extend-exclude "*.ipynb" exercises minivllm tests
 
   notebook-hygiene:
     runs-on: ubuntu-latest

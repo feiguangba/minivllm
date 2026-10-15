@@ -5,6 +5,8 @@
     python -m minivllm "你好，世界" --max-new 16 --seed 0
 """
 import argparse
+import sys
+
 import torch
 
 from minivllm.tokenizer import MiniBPETokenizer
@@ -15,6 +17,12 @@ from minivllm.engine import LLMEngine
 
 
 def main(argv=None):
+    # 中文 Windows 控制台/管道默认是 GBK，而随机权重解码出的伪文本含 U+FFFD，
+    # 直接 print 会抛 UnicodeEncodeError 让整条命令崩掉；这里只放宽不可编码字符的处置。
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="replace")
+
     ap = argparse.ArgumentParser(prog="minivllm",
                                  description="迷你 LLM 推理引擎（教学用，随机权重输出伪文本）")
     ap.add_argument("prompt", help="输入 prompt")

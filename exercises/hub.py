@@ -1,7 +1,10 @@
 """minivllm Streamlit 课表。默认占用 8501。
 
-选一课后可用 APP 环境变量切到对应演示：
-  docker compose run --rm -e APP=exercises/ch02/app_10_paged_demo.py labs
+在仓库根目录启动：
+  streamlit run exercises/hub.py
+
+它只负责"选课 + 给出运行命令"；真正的动态演示是各章的 app_XX_*.py，
+另开一个终端用 `streamlit run <脚本>` 跑（见页面里的命令块）。
 """
 from __future__ import annotations
 
@@ -9,7 +12,7 @@ from pathlib import Path
 
 import streamlit as st
 
-ROOT = Path("/workspace") if Path("/workspace/exercises").is_dir() else Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[1]
 EXERCISES = ROOT / "exercises"
 
 CHAPTERS = [
@@ -36,7 +39,7 @@ def list_apps(chapter: str) -> list[Path]:
 
 st.set_page_config(page_title="minivllm 实验台", layout="wide")
 st.title("minivllm · 交互实验台")
-st.caption("Jupyter Lab → http://localhost:8888 （token: vllm_learn）  ·  本页是 Streamlit 课表")
+st.caption("本机 Jupyter Lab → http://localhost:8888  ·  本页是 Streamlit 课表（8501）")
 
 c1, c2, c3 = st.columns(3)
 c1.metric("练习册", "100 课")
@@ -47,8 +50,8 @@ st.markdown(
     """
 **两条用法**
 
-1. Jupyter：打开 `exercises/chXX/NN_*.ipynb`，内核选 `Python 3 (uv_cuda)`。
-2. 演示：在下面选一课，用 `APP=...` 重启 streamlit 服务；或本机 `streamlit run <脚本>`。
+1. Jupyter：打开 `exercises/chXX/NN_*.ipynb`，内核选 `python3`（即你装了 ipykernel 的那个环境）。
+2. 演示：在下面选一课，复制命令到另一个终端执行；演示脚本各自占用 8502 端口，本课表留在 8501。
 """
 )
 
@@ -64,8 +67,7 @@ if not apps:
 rel_apps = [str(p.relative_to(ROOT)).replace("\\", "/") for p in apps]
 choice = st.selectbox("演示脚本", rel_apps)
 st.code(
-    f"docker compose run --rm -e APP={choice} -p 8501:8501 labs\n"
-    f"streamlit run {choice} --server.port 8501",
+    f"streamlit run {choice} --server.port 8502",
     language="bash",
 )
 

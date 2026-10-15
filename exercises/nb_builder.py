@@ -1,6 +1,6 @@
 """
 nb_builder.py — minivllm 笔记本生成工具
-用法:  import sys; sys.path.insert(0, r"D:\\Project\\21-Cpp_learn\\explore\\minivllm\\exercises")
+用法:  import sys; sys.path.insert(0, r"<repo-root>/exercises")
        from nb_builder import Notebook
        nb = Notebook("标题", emoji="🚀")
        nb.md("# 第 1 课 ...", "段落...")
@@ -17,9 +17,9 @@ class Notebook:
         self.nb = nbf.v4.new_notebook()
         self.nb.metadata = {
             "kernelspec": {
-                "display_name": "Python 3 (uv_cuda)",
+                "display_name": "Python 3 (vllm_learn)",
                 "language": "python",
-                "name": "uv_cuda",
+                "name": "python3",
             },
             "language_info": {"name": "python", "version": "3.12"},
         }

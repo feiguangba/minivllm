@@ -12,5 +12,7 @@ seaborn==0.13.2
 requests==2.32.3
 pillow==11.0.0
 nbconvert==7.16.4
-# tornado>=7 与 jupyter_server 2.21 的 FileFindHandler 冲突，导致静态文件 500。
-tornado<7
+# tornado 6.5.9+ 会要求 FileFindHandler 提供 allowed_symlink_directory，
+# 未修复的 jupyter_server(≤2.21.0) 不设它，导致 Jupyter 静态资源全 500。
+# 官方修复在 jupyter_server 2.21.1（CHANGELOG: "Fix compatibility with Tornado v6.5.9+"），这里锁下限。
+jupyter_server>=2.21.1

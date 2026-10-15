@@ -12,7 +12,6 @@
 [![GitHub Stars](https://img.shields.io/github/stars/feiguangba/minivllm?style=flat-square&color=DAA520)](https://github.com/feiguangba/minivllm/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/feiguangba/minivllm?style=flat-square)](https://github.com/feiguangba/minivllm/network)
 [![Python](https://img.shields.io/badge/python-3.12-blue?style=flat-square)](https://www.python.org/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/fuyunsi/vllm-learn-labs?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/r/fuyunsi/vllm-learn-labs)
 [![Binder](https://img.shields.io/badge/Binder-launch-E77C35?style=flat-square&logo=jupyter&logoColor=white)](https://mybinder.org/v2/gh/feiguangba/minivllm/master)
 
 [中文](./README.md) | [English](./README_en.md)
@@ -23,7 +22,7 @@
 
 **minivllm** 是一套从零到一理解 LLM 推理系统的开源课程。围绕 vLLM 的核心技术——KV Cache、PagedAttention、Continuous Batching、CUDA Graph、量化、并行、Attention Kernel、Triton、AI 编译器、昇腾全栈——展开 **11 章 100 课** 的动手练习，并配一个 **~500 行、可运行、带测试** 的迷你推理引擎，把每节课的概念落成真实代码。
 
-> 你只需要：跟着课程跑 notebook（有 GPU 用 Docker，没有用 Binder）</br>
+> 你只需要：本地装好 Python 3.12 依赖就能跑 notebook（有 GPU 更快，没有也能跑），或者用 Binder 免安装</br>
 > 你将得到：一条从「会用」到「能自己写出推理引擎」的完整学习路径
 
 ## ✨ 项目组成
@@ -51,19 +50,22 @@
 ```bash
 git clone https://github.com/feiguangba/minivllm.git
 cd minivllm
-docker compose up --build          # GPU 教学镜像（torch 2.11.0+cu128）
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+pip install torch --index-url https://download.pytorch.org/whl/cu128   # 无 GPU 改 .../whl/cpu
+
+jupyter lab                       # http://localhost:8888，逐课跑 exercises/chXX/NN_*.ipynb
+streamlit run exercises/hub.py    # 另开一个终端：Streamlit 课表 http://localhost:8501
 ```
 
-浏览器打开 [http://localhost:8888](http://localhost:8888)（token `vllm_learn`）与 [http://localhost:8501](http://localhost:8501)（Streamlit 交互演示）。
-
-不想本地构建？`docker pull fuyunsi/vllm-learn-labs:gpu` 后 `docker compose up -d labs`（镜像约 20GB）。
+Jupyter 里内核选 `python3`（就是你装依赖的那个环境）。`torch` 单独安装是因为 CUDA 版要按机器选源；只跑 ch01–ch03 与 `minivllm` 的话，CPU 版完全够用。
 
 | 环境 | 适合 | 入口 |
 |---|---|---|
-| **Docker（推荐）** | 完整跑通 100 课，需 NVIDIA GPU | 上面的命令 |
+| **本机 Python 3.12（推荐）** | 完整跑通 100 课；有 GPU 更快，无 GPU 也能跑 ch01–ch03 与 `minivllm` | 上面的命令 |
 | **Binder** | 无本地环境，浏览器体验 CPU 课程 | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/feiguangba/minivllm/master) |
 | **Colab** | 免费 GPU 逐课打开 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/feiguangba/minivllm/blob/master/exercises/ch01/01_token_and_tokenizer.ipynb) |
-| **本机 uv** | 不想用 Docker | `pip install -r requirements.txt` + `jupyter lab` |
+| **WSL2 / Linux** | 真实部署 `vllm serve`（Windows 不原生支持） | 见 [ch08 第 48 课](exercises/ch08/48_serve_model.ipynb) |
 
 没有 GPU 也能跑大部分课程——ch01–ch03 与迷你引擎 `minivllm` 纯 CPU 即可：
 
@@ -106,11 +108,10 @@ python -m minivllm "the quick brown fox" --max-new 16 --seed 0 --verbose
 ```
 minivllm/
 ├── minivllm/                # ★ 迷你推理引擎包（~500 行，带测试）
-├── exercises/               # 练习册：11 章 100 课 + 12 张架构图
+├── exercises/               # 练习册：11 章 100 课 + 12 张架构图 + Streamlit 课表 hub.py
 ├── docs/                    # 8 篇 vLLM V1 源码级架构文档 + 版本约定
 ├── answers/                 # 399 题参考答案
 ├── tests/                   # 迷你引擎测试
-├── docker/                  # GPU 教学镜像（Dockerfile / entrypoint）
 ├── .binder/                 # Binder 云端环境（CPU）
 └── assets/                  # LOGO
 ```
